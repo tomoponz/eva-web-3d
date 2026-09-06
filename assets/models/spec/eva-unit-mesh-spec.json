@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "assetId": "eva-unit",
+  "referenceHeight": 80.0,
+  "units": "meters-in-runtime-normalized-units-in-source",
+  "orientation": {
+    "up": "+Y",
+    "front": "+Z",
+    "dorsal": "-Z",
+    "origin": "midpoint-between-feet-on-floor"
+  },
+  "runtime": {
+    "assetPath": "assets/models/eva-unit.glb",
+    "prototypePath": "assets/models/eva-unit-prototype.glb",
+    "scaleParameter": "EVA_HEIGHT",
+    "entryPlugRegion": "dorsal-neck-upper-back"
+  },
+  "regions": [
+    {"id":"feet","yMin":0,"yMax":5,"maxWidth":8,"maxDepth":10},
+    {"id":"lowerLegs","yMin":5,"yMax":25,"maxWidth":9,"maxDepth":6.5},
+    {"id":"upperLegs","yMin":25,"yMax":42,"maxWidth":10,"maxDepth":7},
+    {"id":"pelvis","yMin":40,"yMax":47,"maxWidth":12,"maxDepth":7.5},
+    {"id":"abdomen","yMin":46,"yMax":54,"maxWidth":8,"maxDepth":6},
+    {"id":"chest","yMin":53,"yMax":65,"maxWidth":15,"maxDepth":10},
+    {"id":"shoulderPylons","yMin":57,"yMax":70,"maxWidth":22,"maxDepth":7},
+    {"id":"neck","yMin":64,"yMax":69,"maxWidth":6.5,"maxDepth":6.5},
+    {"id":"head","yMin":68,"yMax":78,"maxWidth":8,"maxDepth":8},
+    {"id":"topFeature","yMin":74,"yMax":80,"maxWidth":4,"maxDepth":4}
+  ],
+  "lod": {
+    "lod0Triangles": [120000, 220000],
+    "lod1Triangles": [55000, 100000],
+    "lod2Triangles": [18000, 40000],
+    "lod3TrianglesOptional": [5000, 12000]
+  },
+  "materials": [
+    "MAT_EVA_PURPLE_ARMOR",
+    "MAT_EVA_PURPLE_DARK",
+    "MAT_EVA_GREEN_ARMOR",
+    "MAT_EVA_BLACK_MECH",
+    "MAT_EVA_METAL",
+    "MAT_EVA_RUBBER",
+    "MAT_EVA_EYE_EMISSIVE",
+    "MAT_EVA_SENSOR_EMISSIVE",
+    "MAT_EVA_WARNING_ORANGE"
+  ],
+  "sockets": [
+    "SOCKET_ENTRY_PLUG",
+    "SOCKET_RESTRAINT_CHEST_L",
+    "SOCKET_RESTRAINT_CHEST_R",
+    "SOCKET_RESTRAINT_SHOULDER_L",
+    "SOCKET_RESTRAINT_SHOULDER_R",
+    "SOCKET_FOOT_L",
+    "SOCKET_FOOT_R",
+    "SOCKET_HEAD_LOOK"
+  ],
+  "collision": ["COL_BODY", "COL_LEG_L", "COL_LEG_R", "COL_FOOT_L", "COL_FOOT_R"],
+  "reviewCameras": [
+    "CAM_HUMAN_FRONT_LOW",
+    "CAM_HUMAN_SIDE_LOW",
+    "CAM_SERVICE_CHEST",
+    "CAM_SERVICE_HEAD",
+    "CAM_REAR_DORSAL",
+    "CAM_LONG_CAGE"
+  ]
+}
