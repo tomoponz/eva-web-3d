@@ -19,13 +19,17 @@ const config = deriveConfig(CAGE_CONFIG);
 const requiredParams = [
   'EVA_HEIGHT', 'CAGE_WIDTH', 'CAGE_DEPTH', 'CAGE_HEIGHT', 'CATWALK_LEVEL_COUNT',
   'LOWER_PIT_DEPTH', 'CAGE_FLUID_ENABLED', 'CAGE_FLUID_LEVEL', 'ENTRY_PLUG_KEEP_OUT',
-  'LAUNCH_INTERFACE_OFFSET'
+  'LAUNCH_INTERFACE_OFFSET', 'DEBUG_FLY_MODE', 'DEBUG_FLY_SPEED',
+  'DEBUG_FLY_FAST_SPEED', 'DEBUG_BRIGHT_MODE'
 ];
 for (const key of requiredParams) {
   if (config[key] === undefined || config[key] === null) throw new Error(`Missing parameter: ${key}`);
 }
 if (config.ENTRY_PLUG_KEEP_OUT.centerY <= config.EVA_HEIGHT * 0.5) {
   throw new Error('Entry Plug keep-out must remain in dorsal upper-body region.');
+}
+if (config.DEBUG_FLY_SPEED <= 0 || config.DEBUG_FLY_FAST_SPEED < config.DEBUG_FLY_SPEED) {
+  throw new Error('Debug fly speeds must be positive and fast speed must be >= normal fly speed.');
 }
 if (config.CAGE_HEIGHT === 100) {
   console.warn('Note: derived cage height happens to equal 100m; this is still a parameterized production assumption.');
