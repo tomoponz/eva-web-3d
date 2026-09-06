@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "voxel_size_m": 0.12,
+  "surface_voxels": 184206,
+  "height_m": 80,
+  "origin_m": [
+    -15,
+    0,
+    -8
+  ],
+  "materials": {
+    "1": "purple_armor",
+    "2": "dark_frame",
+    "3": "green_accent",
+    "4": "metal_joint",
+    "5": "warning_orange",
+    "6": "emissive_eye"
+  },
+  "rendering": {
+    "near": "instanced micro-cubes",
+    "far": "vertex-colored point cloud from identical surface samples"
+  },
+  "status": "production assumption; not canon dimensions"
+}
