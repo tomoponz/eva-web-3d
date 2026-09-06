@@ -191,20 +191,24 @@ This unit does not establish:
 - whether either branch is staff-only or maintenance-only;
 - whether the shortcut duct is a normal personnel route;
 - fire doors or isolation shutters at the node;
-- utility cabinets, cable trays, floor drains or maintenance hatches at the junction.
+- utility cabinets, cable trays, floor drains or access panels specific to the junction;
+- service access behind branch walls.
 
-These should not be added as Canon details without source-specific evidence.
+Any such additions remain `PRODUCTION / ENGINEERING INFERENCE` until separately researched.
 
 ## Visual Observations
 
-The current evidence set safely supports only topological/scene observations:
-- two outgoing options expressed as right and left;
-- the chosen right branch rises;
-- a later branch choice occurs;
-- the right branch reaches an exterior-facing/security-door endpoint.
+Exact branch-node visual geometry is unresolved.
 
-Current public visual search does **not** safely establish:
-- T vs Y plan;
+Scene/action evidence supports:
+- a human-scale junction where a party can stop;
+- two directional choices perceived as left and right;
+- an outgoing route with noticeable upward grade;
+- an exterior-facing door at the end of the wrong/right branch.
+
+Not supported by checked evidence:
+- T-junction vs Y-junction;
+- 90-degree branch angles;
 - symmetric branch widths;
 - a central column/island;
 - specific signage at the node;

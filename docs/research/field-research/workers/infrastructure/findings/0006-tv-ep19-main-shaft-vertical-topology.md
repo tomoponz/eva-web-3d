@@ -209,42 +209,26 @@ NervMainShaft
 │  ├─ IntactState
 │  ├─ CompromisedState
 │  └─ BreachedState
-├─ ShaftShell
-├─ VerticalVoid
-├─ SparseUtilityElements
-├─ DamageDebrisSystem
-└─ LowerDogmaInterface
+├─ ShaftVolume
+│  ├─ profile: configurable
+│  ├─ clearSpan: configurable
+│  └─ depth: configurable
+├─ WallShell
+├─ ServicePipeLayer
+│  └─ scene-supported sparse pipe element(s)
+├─ LowerCriticalSectorInterface
+└─ DamageSequenceController
+   ├─ SEALED
+   ├─ ARMOR_COMPROMISED
+   ├─ EXPOSED
+   └─ BREACHED
 ```
 
-Suggested parameters:
-- `shaftProfile`
-- `clearSpan`
-- `shaftDepth`
-- `wallSegmentCount`
-- `utilityElementCount`
-- `utilityElementPositions`
-- `armorBoundaryDepth`
-- `lowerInterfaceOffset`
-
-All numeric values remain production values, not Canon.
-
-State logic:
-
-```text
-SEALED
-  ↓ armor damage
-ARMOR_COMPROMISED
-  ↓ final armor destroyed
-EXPOSED
-  ↓ Angel intrusion
-BREACHED
-```
-
-Implementation constraints:
-1. keep the shaft profile replaceable;
-2. support very long vertical sightlines;
-3. use large relative scale suitable for an Angel/EVA body envelope;
-4. do not add counterweights/hoist ropes by default;
+Implementation rules:
+1. keep the vertical volume as unique large geometry;
+2. use parametric wall segments because exact profile is unresolved;
+3. model only sparse service piping until stronger setting-sheet evidence exists;
+4. do not add elevator counterweights/hoist ropes by default;
 5. separate normal-state navigation from Episode 19 damage-state traversal;
 6. use fog/occlusion/LOD for the long vertical sightline in browser rendering.
 

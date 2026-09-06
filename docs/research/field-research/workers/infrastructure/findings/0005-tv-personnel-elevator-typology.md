@@ -209,7 +209,7 @@ No current source establishes:
 - counterweight guards;
 - drive motor placement.
 
-These may be designed from real-world elevator practice only as `PRODUCTION / ENGINEERING_INFERENCE`.
+These may be designed from real-world elevator practice only as `PRODUCTION / ENGINEERING INFERENCE`.
 
 ## Visual Observations
 
@@ -297,7 +297,7 @@ Only `travelAxis = vertical` and multi-person human use are strongly supported a
 
 ## Real-World Engineering Analogies
 
-`PRODUCTION / ENGINEERING_INFERENCE` only:
+`PRODUCTION / ENGINEERING INFERENCE` only:
 
 A large underground industrial complex would reasonably separate clean passenger elevators from goods/service lifts because their enclosure, access, emergency operation and maintenance needs differ. That real-world pattern is consistent with the multiple TV visual treatments, but it does not prove NERV's drive technology, lift code, rated load or machine-room arrangement.
 
