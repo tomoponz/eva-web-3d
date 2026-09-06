@@ -53,6 +53,7 @@ def build_mesh(resolution=RESOLUTION):
         dx, dy, dz = pax-bax*h, pay-bay*h, paz-baz*h
         return np.sqrt(dx*dx + dy*dy + dz*dz) - r
 
+    # Limbs and feet.
     for s in (-1, 1):
         union(capsule(2.7*s, 7, 0, 2.4*s, 22.5, 0, 2.0))
         union(capsule(2.0*s, 24, .2, 1.6*s, 38, 0, 2.45))
@@ -60,6 +61,7 @@ def build_mesh(resolution=RESOLUTION):
         union(ellipsoid(2.9*s, 2.8, -2.1, 1.8, 1.2, 2.1))
         union(sphere(2.6*s, 23.5, .5, 2.1))
 
+    # Continuous pelvis -> torso -> head transition.
     union(ellipsoid(0, 43.5, 0, 6.6, 4.8, 4.3))
     union(ellipsoid(0, 51, 0, 4.8, 5.6, 3.5))
     union(ellipsoid(0, 59, .8, 7.2, 9.2, 4.7))
