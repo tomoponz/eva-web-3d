@@ -3,6 +3,7 @@ import { CAGE_CONFIG, deriveConfig } from './config.js';
 import { createCageScene } from './cage/createCageScene.js';
 import { addIndustrialDetail } from './cage/addIndustrialDetail.js';
 import { addFineDetail } from './cage/addFineDetail.js';
+import { replacePlaceholderEva } from './cage/loadEvaGlb.js';
 import { FirstPersonController } from './player/FirstPersonController.js';
 
 const config = deriveConfig(CAGE_CONFIG);
@@ -32,12 +33,24 @@ scene.add(cage.root);
 const controller = new FirstPersonController(camera, renderer.domElement, config, cage.colliders, cage.navigation);
 controller.setPosition(cage.spawn);
 
-// Low environment contribution plus localized work / warning lights.
+let evaAssetState = config.USE_GLB_EVA ? 'GLB LOADING' : 'PROCEDURAL';
+replacePlaceholderEva(cage.root, config)
+  .then((result) => {
+    if (result.loaded) {
+      evaAssetState = 'GLB HERO';
+    } else {
+      evaAssetState = 'PROCEDURAL FALLBACK';
+      console.warn('GLB EVA not loaded:', result.reason);
+    }
+  })
+  .catch((error) => {
+    evaAssetState = 'PROCEDURAL FALLBACK';
+    console.warn('Failed to load EVA GLB asset; procedural fallback remains active.', error);
+  });
+
 const ambient = new THREE.HemisphereLight(0x778894, 0x17110c, 0.18);
 scene.add(ambient);
 
-// Debug-only fill lights make the blockout readable from any inspection angle.
-// They are intentionally non-cinematic and do not cast shadows.
 const debugAmbient = new THREE.AmbientLight(0xffffff, 0);
 const debugFront = new THREE.DirectionalLight(0xffffff, 0);
 debugFront.position.set(0, config.CAGE_HEIGHT * 0.42, config.CAGE_DEPTH * 0.9);
@@ -45,7 +58,31 @@ const debugRear = new THREE.DirectionalLight(0xbfd7ff, 0);
 debugRear.position.set(0, config.CAGE_HEIGHT * 0.34, -config.CAGE_DEPTH * 0.9);
 const debugTop = new THREE.DirectionalLight(0xfff1d8, 0);
 debugTop.position.set(config.CAGE_WIDTH * 0.25, config.CAGE_HEIGHT * 1.15, config.CAGE_DEPTH * 0.15);
-scene.add(debugAmbient, debugFront, debugRear, debugTop);
+const debugZenith = new THREE.DirectionalLight(0xf3f7ff, 0);
+debugZenith.position.set(0, config.CAGE_HEIGHT * 1.45, 0);
+scene.add(debugAmbient, debugFront, debugRear, debugTop, debugZenith);
+
+const upperFloodLights = [];
+for (const side of [-1, 1]) {
+  for (const zRatio of [-0.28, -0.08, 0.12, 0.32]) {
+    const flood = new THREE.SpotLight(0xfff2cf, 0, config.CAGE_DEPTH * 1.4, Math.PI / 4.4, 0.45, 1.0);
+    flood.position.set(side * config.CAGE_WIDTH * 0.34, config.CAGE_HEIGHT * 0.95, config.CAGE_DEPTH * zRatio);
+    flood.target.position.set(0, config.CAGE_HEIGHT * 0.58, config.CAGE_DEPTH * (zRatio * 0.55));
+    flood.castShadow = false;
+    scene.add(flood, flood.target);
+    upperFloodLights.push(flood);
+  }
+}
+
+const upperWorkLights = [];
+for (const side of [-1, 1]) {
+  for (const yRatio of [0.70, 0.80, 0.90]) {
+    const fill = new THREE.PointLight(0xe4eefc, 0, config.CAGE_WIDTH * 0.95, 1.8);
+    fill.position.set(side * config.CAGE_WIDTH * 0.40, config.CAGE_HEIGHT * yRatio, -config.CAGE_DEPTH * 0.08);
+    scene.add(fill);
+    upperWorkLights.push(fill);
+  }
+}
 
 const key = new THREE.SpotLight(0xe6dfcf, 5200, config.CAGE_DEPTH * 2.0, Math.PI/5, 0.55, 1.2);
 key.position.set(config.CAGE_WIDTH*0.28, config.CAGE_HEIGHT*0.62, config.CAGE_DEPTH*0.30);
@@ -72,21 +109,23 @@ let debugBright = Boolean(config.DEBUG_BRIGHT_MODE);
 function applyDebugBrightness(enabled) {
   debugBright = Boolean(enabled);
 
-  renderer.toneMappingExposure = debugBright ? 2.05 : 0.82;
-  ambient.intensity = debugBright ? 1.15 : 0.18;
-  key.intensity = debugBright ? 9000 : 5200;
-  warm.intensity = debugBright ? 780 : 450;
+  renderer.toneMappingExposure = debugBright ? 2.35 : 0.82;
+  ambient.intensity = debugBright ? 1.28 : 0.18;
+  key.intensity = debugBright ? 10000 : 5200;
+  warm.intensity = debugBright ? 860 : 450;
 
-  // Full-scene inspection fill. This is deliberately much brighter than the
-  // cinematic pass so dark armor, wall recesses, and lower Cage geometry remain readable.
-  debugAmbient.intensity = debugBright ? 1.45 : 0;
-  debugFront.intensity = debugBright ? 1.65 : 0;
-  debugRear.intensity = debugBright ? 1.05 : 0;
-  debugTop.intensity = debugBright ? 1.25 : 0;
+  debugAmbient.intensity = debugBright ? 1.60 : 0;
+  debugFront.intensity = debugBright ? 1.85 : 0;
+  debugRear.intensity = debugBright ? 1.25 : 0;
+  debugTop.intensity = debugBright ? 1.55 : 0;
+  debugZenith.intensity = debugBright ? 1.45 : 0;
 
-  scene.background.set(debugBright ? 0x596168 : 0x07090b);
-  scene.fog.color.set(debugBright ? 0x596168 : 0x07090b);
-  scene.fog.density = debugBright ? 0.00035 : 0.0085;
+  for (const flood of upperFloodLights) flood.intensity = debugBright ? 2300 : 0;
+  for (const fill of upperWorkLights) fill.intensity = debugBright ? 850 : 0;
+
+  scene.background.set(debugBright ? 0x707981 : 0x07090b);
+  scene.fog.color.set(debugBright ? 0x707981 : 0x07090b);
+  scene.fog.density = debugBright ? 0.00005 : 0.0085;
 }
 applyDebugBrightness(debugBright);
 
@@ -113,7 +152,7 @@ function frame() {
   const feetY = camera.position.y - config.HUMAN_EYE_HEIGHT;
   const mode = controller.flyMode ? 'FLY' : 'WALK';
   const lightMode = debugBright ? 'DEBUG FULL-BRIGHT' : 'CINEMATIC';
-  status.textContent = `${mode} | ${lightMode} | EVA ${config.EVA_HEIGHT.toFixed(0)}m assumption | x ${camera.position.x.toFixed(1)} y ${feetY.toFixed(1)} z ${camera.position.z.toFixed(1)}`;
+  status.textContent = `${mode} | ${lightMode} | ${evaAssetState} | EVA ${config.EVA_HEIGHT.toFixed(0)}m assumption | x ${camera.position.x.toFixed(1)} y ${feetY.toFixed(1)} z ${camera.position.z.toFixed(1)}`;
   renderer.render(scene, camera);
 }
 frame();
