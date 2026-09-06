@@ -12,6 +12,7 @@ export class FirstPersonController {
     this.pitch = 0;
     this.velocityY = 0;
     this.locked = false;
+    this.flyMode = Boolean(config.DEBUG_FLY_MODE);
 
     this._onMouseMove = (event) => {
       if (!this.locked) return;
@@ -36,6 +37,16 @@ export class FirstPersonController {
 
   setPosition(position) {
     this.camera.position.set(position.x, position.y, position.z);
+  }
+
+  setFlyMode(enabled) {
+    this.flyMode = Boolean(enabled);
+    this.velocityY = 0;
+  }
+
+  toggleFlyMode() {
+    this.setFlyMode(!this.flyMode);
+    return this.flyMode;
   }
 
   _groundHeight(x, z) {
@@ -67,7 +78,30 @@ export class FirstPersonController {
     return false;
   }
 
-  update(delta) {
+  _updateFly(delta) {
+    const move = new THREE.Vector3();
+    const forward = new THREE.Vector3(-Math.sin(this.yaw), 0, -Math.cos(this.yaw));
+    const right = new THREE.Vector3(Math.cos(this.yaw), 0, -Math.sin(this.yaw));
+
+    if (this.keys.has('KeyW')) move.add(forward);
+    if (this.keys.has('KeyS')) move.sub(forward);
+    if (this.keys.has('KeyD')) move.add(right);
+    if (this.keys.has('KeyA')) move.sub(right);
+    if (this.keys.has('Space') || this.keys.has('KeyE')) move.y += 1;
+    if (this.keys.has('ControlLeft') || this.keys.has('ControlRight') || this.keys.has('KeyQ')) move.y -= 1;
+
+    if (move.lengthSq() > 0) move.normalize();
+    const speed = this.keys.has('ShiftLeft') || this.keys.has('ShiftRight')
+      ? this.config.DEBUG_FLY_FAST_SPEED
+      : this.config.DEBUG_FLY_SPEED;
+
+    // Debug fly mode intentionally ignores gravity and scene collision so the
+    // entire blockout can be inspected without traversal geometry getting in the way.
+    this.camera.position.addScaledVector(move, speed * delta);
+    this.velocityY = 0;
+  }
+
+  _updateWalk(delta) {
     const move = new THREE.Vector3();
     const forward = new THREE.Vector3(-Math.sin(this.yaw), 0, -Math.cos(this.yaw));
     const right = new THREE.Vector3(Math.cos(this.yaw), 0, -Math.sin(this.yaw));
@@ -110,5 +144,13 @@ export class FirstPersonController {
       p.y = ground + this.config.HUMAN_EYE_HEIGHT;
       this.velocityY = 0;
     }
+  }
+
+  update(delta) {
+    if (this.flyMode) {
+      this._updateFly(delta);
+      return;
+    }
+    this._updateWalk(delta);
   }
 }
