@@ -1,15 +1,19 @@
-# EVA GLB assets
+# EVA runtime assets
 
-## Active runtime model — M4 Continuous Production
+## Active runtime model — M5 Micro-Voxel Production
 
-- `eva-unit-continuous-prod.glb` is the active browser EVA model.
-- It is generated reproducibly by `scripts/generate-eva-web-production.py` and committed by `.github/workflows/generate-eva-web-production.yml`.
-- The production generator creates one smoothed implicit surface instead of assembling visible box/cylinder/capsule meshes at runtime.
-- Current production acceptance requires one watertight connected component and a 20k–50k triangle Web budget. The current generated asset is about 32.8k triangles and ~657 KB.
-- Runtime loading uses the normal Three.js `GLTFLoader`; after successful load the old procedural EVA layers are hidden. If loading fails, the procedural model remains as a fail-safe fallback.
-- Dorsal Entry Plug-region geometry remains an upper-back / neck production interpretation; it is not promoted to a canon dimension or insertion-axis claim.
+- `eva-microvoxel-m5.bin` is the active browser EVA surface model.
+- It is generated reproducibly by `scripts/generate-eva-microvoxel.py` and committed by `.github/workflows/generate-eva-microvoxel.yml`.
+- The active cell size is 0.12 m: 80 m height corresponds to roughly 667 vertical voxel steps.
+- Only surface cells are stored. Interior occupied cells are discarded before export.
+- The current generated asset contains about 184k surface voxels and is ~1.29 MB in its compact binary representation.
+- Near the EVA, cells are rendered as `InstancedMesh` micro-cubes with a 0.94 scale factor, leaving only a very small seam between adjacent cells.
+- Farther away, the same surface samples are rendered as a vertex-colored `Points` LOD so the silhouette remains dense without drawing millions of cube triangles.
+- The generator silhouette is a production interpretation aimed at a slender EVA-like form; dimensions other than the project-level `EVA_HEIGHT` assumption are not canon claims.
+- Dorsal Entry Plug-region geometry remains an upper-back / neck production interpretation and does not assert an unresolved insertion axis.
 
 ## Legacy/reference assets
 
-- `eva-unit-hero.glb.gz` is the older M3 primitive/instanced hero experiment. It is retained as a reference asset but is no longer the active runtime model.
-- `docs/design/eva-cage/eva-unit-mesh-spec.md` remains the authored modeling specification and review target for future Blender/PBR refinement.
+- `eva-unit-continuous-prod.glb` is the superseded M4 continuous-surface experiment. It remains only as a reference/fallback asset and is not the active runtime model.
+- `eva-unit-hero.glb.gz` is the older M3 primitive/instanced hero experiment.
+- `docs/design/eva-cage/eva-unit-mesh-spec.md` remains a future authored mesh/PBR reference.
