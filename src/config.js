@@ -43,6 +43,13 @@ export const CAGE_CONFIG = {
   PLAYER_HEIGHT: 1.76,
   PLAYER_SPEED: 4.2,
   PLAYER_FAST_SPEED: 7.2,
+
+  // Debug inspection defaults. Toggle at runtime with G (fly) and B (brightness).
+  DEBUG_FLY_MODE: true,
+  DEBUG_FLY_SPEED: 12,
+  DEBUG_FLY_FAST_SPEED: 28,
+  DEBUG_BRIGHT_MODE: true,
+
   GRAVITY: 20,
   STEP_HEIGHT: 0.42
 };
