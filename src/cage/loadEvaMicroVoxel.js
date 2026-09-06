@@ -139,6 +139,7 @@ export async function loadEvaMicroVoxel(root, config) {
 
   const group = new THREE.Group();
   group.name = 'eva-microvoxel-m5';
+  group.scale.setScalar(config.EVA_HEIGHT / 80);
   const cubeLod = buildCubeLod(parsed.perMaterial, parsed.voxelSize, config.EVA_MICRO_VOXEL_GRAIN_SCALE);
   const pointLod = buildPointLod(parsed.records, parsed.voxelSize);
   group.add(pointLod, cubeLod);
@@ -160,7 +161,7 @@ export async function loadEvaMicroVoxel(root, config) {
   return {
     loaded: true,
     object: group,
-    voxelSize: parsed.voxelSize,
+    voxelSize: parsed.voxelSize * (config.EVA_HEIGHT / 80),
     voxelCount: parsed.records.length,
     get mode() { return nearMode ? 'MICRO-CUBES' : 'POINT-LOD'; },
     update(camera) {
