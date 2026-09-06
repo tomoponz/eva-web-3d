@@ -44,8 +44,11 @@ export const CAGE_CONFIG = {
   PLAYER_SPEED: 4.2,
   PLAYER_FAST_SPEED: 7.2,
 
+  // M4 production EVA: one continuous authored surface generated from the
+  // reproducible mesh build script. Procedural geometry remains fallback only.
   USE_GLB_EVA: true,
-  EVA_ASSET_PATH: '../../assets/models/eva-unit-hero.glb.gz',
+  EVA_MODEL_VARIANT: 'continuous-m4-production',
+  EVA_ASSET_PATH: '../../assets/models/eva-unit-continuous-prod.glb',
 
   // Debug inspection defaults. Toggle at runtime with G (fly) and B (brightness).
   DEBUG_FLY_MODE: true,
