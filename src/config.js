@@ -44,10 +44,17 @@ export const CAGE_CONFIG = {
   PLAYER_SPEED: 4.2,
   PLAYER_FAST_SPEED: 7.2,
 
-  // M4 production EVA: one continuous authored surface generated from the
-  // reproducible mesh build script. Procedural geometry remains fallback only.
-  USE_GLB_EVA: true,
-  EVA_MODEL_VARIANT: 'continuous-m4-production',
+  // M5 production EVA: high-density surface voxels. 0.12m cells are small enough
+  // that the grain is intended to become apparent only at close inspection.
+  USE_MICRO_VOXEL_EVA: true,
+  EVA_MODEL_VARIANT: 'microvoxel-m5-production',
+  EVA_MICRO_VOXEL_ASSET_PATH: '../../assets/models/eva-microvoxel-m5.bin',
+  EVA_MICRO_VOXEL_GRAIN_SCALE: 0.94,
+  EVA_MICRO_VOXEL_NEAR_DISTANCE: 48,
+  EVA_MICRO_VOXEL_MAX_INSTANCES: 220000,
+
+  // Legacy M4 reference/fallback asset. It is not the active visual model.
+  USE_GLB_EVA: false,
   EVA_ASSET_PATH: '../../assets/models/eva-unit-continuous-prod.glb',
 
   // Debug inspection defaults. Toggle at runtime with G (fly) and B (brightness).
