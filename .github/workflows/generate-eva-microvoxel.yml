@@ -25,7 +25,11 @@ jobs:
         run: python -m pip install --disable-pip-version-check numpy
       - name: Generate M5 micro-voxel EVA
         run: python scripts/generate-eva-microvoxel.py
-      - name: Validate runtime
+      - name: Check runtime JavaScript syntax
+        run: |
+          node --check src/main.js
+          node --check src/cage/loadEvaMicroVoxel.js
+      - name: Validate runtime and M5 asset contract
         run: npm test
       - name: Commit generated assets
         run: |
