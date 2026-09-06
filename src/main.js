@@ -3,7 +3,7 @@ import { CAGE_CONFIG, deriveConfig } from './config.js';
 import { createCageScene } from './cage/createCageScene.js';
 import { addIndustrialDetail } from './cage/addIndustrialDetail.js';
 import { addFineDetail } from './cage/addFineDetail.js';
-import { replacePlaceholderEva } from './cage/loadEvaGlb.js';
+import { loadEvaMicroVoxel } from './cage/loadEvaMicroVoxel.js';
 import { FirstPersonController } from './player/FirstPersonController.js';
 
 const config = deriveConfig(CAGE_CONFIG);
@@ -33,19 +33,21 @@ scene.add(cage.root);
 const controller = new FirstPersonController(camera, renderer.domElement, config, cage.colliders, cage.navigation);
 controller.setPosition(cage.spawn);
 
-let evaAssetState = config.USE_GLB_EVA ? 'GLB LOADING' : 'PROCEDURAL';
-replacePlaceholderEva(cage.root, config)
+let evaAssetState = config.USE_MICRO_VOXEL_EVA ? 'M5 MICRO LOADING' : 'PROCEDURAL';
+let microVoxelEva = null;
+loadEvaMicroVoxel(cage.root, config)
   .then((result) => {
     if (result.loaded) {
-      evaAssetState = 'GLB HERO';
+      microVoxelEva = result;
+      evaAssetState = `M5 ${result.mode} ${result.voxelSize.toFixed(2)}m / ${result.voxelCount.toLocaleString()} voxels`;
     } else {
       evaAssetState = 'PROCEDURAL FALLBACK';
-      console.warn('GLB EVA not loaded:', result.reason);
+      console.warn('Micro-voxel EVA not loaded:', result.reason);
     }
   })
   .catch((error) => {
     evaAssetState = 'PROCEDURAL FALLBACK';
-    console.warn('Failed to load EVA GLB asset; procedural fallback remains active.', error);
+    console.warn('Failed to load M5 micro-voxel EVA; procedural fallback remains active.', error);
   });
 
 const ambient = new THREE.HemisphereLight(0x778894, 0x17110c, 0.18);
@@ -95,13 +97,11 @@ const warm = new THREE.PointLight(0xff6a2b, 450, config.CAGE_WIDTH*0.62, 2.0);
 warm.position.set(-config.CAGE_WIDTH*0.30, config.EVA_HEIGHT*0.12, config.CAGE_DEPTH*0.18);
 scene.add(warm);
 
-const warningLights = [];
 for (const side of [-1, 1]) {
   for (const yRatio of [0.08, 0.22, 0.44, 0.67]) {
     const light = new THREE.PointLight(0xff2f18, 60, 8, 2.2);
     light.position.set(side * config.CAGE_WIDTH*0.44, config.CAGE_HEIGHT*yRatio, -config.CAGE_DEPTH*0.20);
     scene.add(light);
-    warningLights.push(light);
   }
 }
 
@@ -148,6 +148,11 @@ function frame() {
   requestAnimationFrame(frame);
   const delta = Math.min(clock.getDelta(), 0.05);
   controller.update(delta);
+
+  if (microVoxelEva) {
+    microVoxelEva.update(camera);
+    evaAssetState = `M5 ${microVoxelEva.mode} ${microVoxelEva.voxelSize.toFixed(2)}m / ${microVoxelEva.voxelCount.toLocaleString()} voxels`;
+  }
 
   const feetY = camera.position.y - config.HUMAN_EYE_HEIGHT;
   const mode = controller.flyMode ? 'FLY' : 'WALK';
