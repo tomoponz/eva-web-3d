@@ -8,6 +8,7 @@ const required = [
   'src/config.js',
   'src/cage/createCageScene.js',
   'src/cage/createEvaPlaceholder.js',
+  'src/cage/addFineDetail.js',
   'src/cage/addIndustrialDetail.js',
   'src/player/FirstPersonController.js',
   'docs/design/eva-cage/README.md',

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { CAGE_CONFIG, deriveConfig } from './config.js';
 import { createCageScene } from './cage/createCageScene.js';
 import { addIndustrialDetail } from './cage/addIndustrialDetail.js';
+import { addFineDetail } from './cage/addFineDetail.js';
 import { FirstPersonController } from './player/FirstPersonController.js';
 
 const config = deriveConfig(CAGE_CONFIG);
@@ -25,12 +26,12 @@ scene.fog = new THREE.FogExp2(0x07090b, 0.0085);
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.05, config.CAGE_HEIGHT * 3.5);
 const cage = createCageScene(config);
 addIndustrialDetail(cage.root, config);
+addFineDetail(cage.root, config);
 scene.add(cage.root);
 
 const controller = new FirstPersonController(camera, renderer.domElement, config, cage.colliders, cage.navigation);
 controller.setPosition(cage.spawn);
 
-// Low environment contribution plus localized work / warning lights.
 const ambient = new THREE.HemisphereLight(0x778894, 0x17110c, 0.18);
 scene.add(ambient);
 
